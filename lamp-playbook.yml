@@ -2,7 +2,7 @@
   become: true
   gather_facts: false
   pre_tasks:
-  - name: Install python2 for Ansible
+  - name: Install python3 for Ansible
     raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
     register: output
     changed_when: output.stdout != ""
