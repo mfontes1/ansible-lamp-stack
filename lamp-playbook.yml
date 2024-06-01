@@ -2,15 +2,30 @@
   become: true
   gather_facts: false
   pre_tasks:
-  - name: Install python3 for Ansible
-    raw: bash -c "test -e /usr/bin/python3 || (apt -qqy update && apt install -qqy python3 python3-pip)"
-    register: output
-    changed_when: output.stdout != ""
-  - name: Gathering Facts
-    setup:
-  roles:
-    - apache2
-    - mysql
-    - php-fpm
+    - name: Install python3 for Ansible
+      raw: bash -c "test -e /usr/bin/python3 || (apt -qqy update && apt install -qqy python3 python3-pip)"
+      register: output
+      changed_when: output.stdout != ""
+
+    - name: Gathering Facts
+      setup:
+
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install LAMP stack
+      apt:
+        name:
+          - apache2
+          - mariadb-server
+          - php
+          - libapache2-mod-php
+          - php-mysql
+        state: present
+
   vars:
     mysql_root_password: "mypass"
+
